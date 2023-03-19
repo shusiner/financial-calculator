@@ -1,9 +1,13 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import Head from "next/head"
+import useHasMounted from "@/hooks/useHasMount"
+import { useLocalStorage } from "@/hooks/useLocalStorage"
 import { pmt } from "financial"
 
 import useStore from "@/lib/useStore"
+import { Icons } from "@/components/icons"
 import { Layout } from "@/components/layout"
+import { LayoutWithHeader } from "@/components/layout-header"
 import { buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -33,13 +37,22 @@ export default function IndexPage() {
     state.isMonth,
     state.updateIsMonth,
   ])
-  const [calculated, setCalculated] = useState(0)
-  useEffect(() => {
-    const periodNum = isMonth ? 12 : 1
-    setCalculated(
-      -pmt(interest / 100 / periodNum, period * periodNum, principal)
-    )
-  }, [interest, isMonth, period, principal])
+  const [loans, addLoan, removeLoan] = useStore((state) => [
+    state.loans,
+    state.addLoan,
+    state.removeLoan,
+  ])
+  const periodNum = isMonth ? 12 : 1
+  const calculated = -pmt(
+    interest / 100 / periodNum,
+    period * periodNum,
+    principal
+  )
+  const loan = { interest, period, principal, isMonth, amount: calculated }
+  const hasMounted = useHasMounted()
+  if (!hasMounted) {
+    return <LayoutWithHeader />
+  }
 
   return (
     <Layout>
@@ -105,11 +118,28 @@ export default function IndexPage() {
           Result: {Math.round(calculated * 100) / 100}
         </p>
 
-        {/* <div className="flex gap-4">
-          <button onClick={add} className={buttonVariants({ size: "lg" })}>
-            Calculate
+        <div className="flex gap-4">
+          <button
+            onClick={() => addLoan(loan)}
+            className={buttonVariants({ size: "lg" })}
+          >
+            Save
           </button>
-        </div> */}
+        </div>
+        {loans.map((loan, idx) => (
+          <div key={idx} className="flex gap-4">
+            <span>{idx}</span>
+            <span>{loan.interest}%</span>
+            <span>{loan.period}</span>
+            <span>{loan.principal}</span>
+            <span>{loan.isMonth ? "Month" : "Year"}</span>
+            <span>{Math.round(loan.amount * 100) / 100}</span>
+            <Icons.delete
+              className="cursor-pointer"
+              onClick={() => removeLoan(idx)}
+            />
+          </div>
+        ))}
       </section>
     </Layout>
   )

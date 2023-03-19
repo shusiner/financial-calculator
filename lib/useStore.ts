@@ -1,6 +1,13 @@
-import { pmt } from "financial"
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
+
+type Loan = {
+  interest: number
+  period: number
+  principal: number
+  isMonth: boolean
+  amount: number
+}
 
 type State = {
   interest: number
@@ -8,6 +15,7 @@ type State = {
   principal: number
   isMonth: boolean
   _hasHydrated: boolean
+  loans: Loan[]
 }
 
 type Action = {
@@ -15,6 +23,8 @@ type Action = {
   updatePeriod: (period: State["period"]) => void
   updatePrincipal: (principal: State["principal"]) => void
   updateIsMonth: (isMonth: State["isMonth"]) => void
+  addLoan: (loan: Loan) => void
+  removeLoan: (index: number) => void
   setHasHydrated: (_hasHydrated: State["_hasHydrated"]) => void
 }
 
@@ -31,10 +41,17 @@ export const useStore = create<State & Action>()(
       period: 15,
       principal: 200000,
       isMonth: true,
+      loans: [],
       updateInterest: (interest) => set(() => ({ interest: interest })),
       updatePeriod: (period) => set(() => ({ period: period })),
       updatePrincipal: (principal) => set(() => ({ principal: principal })),
       updateIsMonth: (isMonth) => set(() => ({ isMonth: isMonth })),
+      addLoan: (loan) =>
+        set(() => ({
+          loans: [...get().loans].concat([loan]),
+        })),
+      removeLoan: (index) =>
+        set(() => ({ loans: get().loans.filter((_, i) => i !== index) })),
     }),
     {
       name: "food-storage", // name of item in the storage (must be unique)
