@@ -56,7 +56,7 @@ export default function IndexPage() {
             type="number"
             id="interest"
             placeholder="interest"
-            value={interest}
+            value={interest === 0 ? "" : interest}
             step="0.1"
             onChange={(e) => {
               updateInterest(Number(e.target.value))
@@ -69,7 +69,7 @@ export default function IndexPage() {
             type="number"
             id="years"
             placeholder="Years"
-            value={period}
+            value={period === 0 ? "" : period}
             onChange={(e) => {
               updatePeriod(Number(e.target.value))
             }}
@@ -81,7 +81,7 @@ export default function IndexPage() {
             type="number"
             id="principal"
             placeholder="Principal"
-            value={principal}
+            value={principal === 0 ? "" : principal}
             onChange={(e) => {
               updatePrincipal(Number(e.target.value))
             }}
