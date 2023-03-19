@@ -37,7 +37,7 @@ export default function IndexPage() {
   useEffect(() => {
     const periodNum = isMonth ? 12 : 1
     setCalculated(
-      pmt(interest / 100 / periodNum, period * periodNum, principal)
+      -pmt(interest / 100 / periodNum, period * periodNum, principal)
     )
   }, [interest, isMonth, period, principal])
 
