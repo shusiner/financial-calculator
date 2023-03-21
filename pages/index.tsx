@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import Head from "next/head"
-import useHasMounted from "@/hooks/useHasMount"
+import useHasMounted from "@/hooks/useHasMounted"
 import { useLocalStorage } from "@/hooks/useLocalStorage"
 import { pmt } from "financial"
 
