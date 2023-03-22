@@ -54,11 +54,33 @@ export const useStore = create<State & Action>()(
         set(() => ({ loans: get().loans.filter((_, i) => i !== index) })),
     }),
     {
-      name: "food-storage", // name of item in the storage (must be unique)
+      name: "finance-storage", // name of item in the storage (must be unique)
       //   storage: createJSONStorage(() => sessionStorage), // (optional) by default the 'localStorage' is used
       //   partialize: (state) => ({ interest: state.interest }),
       onRehydrateStorage: () => (state) => {
         state.setHasHydrated(true)
+      },
+      version: 0,
+      migrate: (persistedState, version) => {
+        switch (version) {
+          case 0:
+            break
+          // reference from https://github.com/ztjhz/FreeChatGPT/blob/main/src/store/store.ts
+          // case 0:
+          //   migrateV0(persistedState as LocalStorageInterfaceV0ToV1);
+          // case 1:
+          //   migrateV1(persistedState as LocalStorageInterfaceV1ToV2);
+          // case 2:
+          //   migrateV2(persistedState as LocalStorageInterfaceV2ToV3);
+          // case 3:
+          //   migrateV3(persistedState as LocalStorageInterfaceV3ToV4);
+          // case 4:
+          //   migrateV4(persistedState as LocalStorageInterfaceV4ToV5);
+          // case 5:
+          //   migrateV5(persistedState as LocalStorageInterfaceV5ToV6);
+          //   break;
+        }
+        return persistedState as State & Action
       },
     }
   )
