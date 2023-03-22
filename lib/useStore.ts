@@ -62,8 +62,10 @@ export const useStore = create<State & Action>()(
       },
       version: 0,
       migrate: (persistedState, version) => {
-        switch (
-          version
+        switch (version) {
+          case 0:
+            break
+          // reference from https://github.com/ztjhz/FreeChatGPT/blob/main/src/store/store.ts
           // case 0:
           //   migrateV0(persistedState as LocalStorageInterfaceV0ToV1);
           // case 1:
@@ -77,7 +79,6 @@ export const useStore = create<State & Action>()(
           // case 5:
           //   migrateV5(persistedState as LocalStorageInterfaceV5ToV6);
           //   break;
-        ) {
         }
         return persistedState as State & Action
       },
